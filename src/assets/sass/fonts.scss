@@ -1,0 +1,42 @@
+/*
+loads all the fonts from assets/fonts
+used fonts: 
+    Lato - 300, 400, 700, 900
+*/
+
+// Lato family
+// font-weight = 300 (Light)
+@font-face {
+    font-family: "Lato";
+    src: url("../fonts/Lato/Lato-Light.ttf") format("ttf");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+// font-weight = 400 (Regular)
+@font-face {
+    font-family: "Lato";
+    src: url("../fonts/Lato/Lato-Regular.ttf") format("ttf");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+// font-weight = 700 (Bold)
+@font-face {
+    font-family: "Lato";
+    src: url("../fonts/Lato/Lato-Bold.ttf") format("ttf");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+// font-weight = 900 (Black)
+@font-face {
+    font-family: "Lato";
+    src: url("../fonts/Lato/Lato-Black.ttf") format("ttf");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
