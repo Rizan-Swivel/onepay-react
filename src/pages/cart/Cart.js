@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import bcrypt from 'bcryptjs';
+import axios from 'axios';
+import { sha256 } from 'js-sha256';
 
 import classes from './Cart.module.scss'
 import { remove } from '../../redux/features/cartSlice';
@@ -10,8 +11,8 @@ import { calTotalPrice } from '../../components/minicart/Minicart';
 const paymentUrl = process.env.REACT_APP_PAYMENT_URL;
 const appId = process.env.REACT_APP_APP_ID;
 const appToken = process.env.REACT_APP_APP_TOKEN;
-// const salt = process.env.REACT_APP_SALT;
-const salt2 = bcrypt.genSaltSync(10);
+const salt = process.env.REACT_APP_SALT;
+// const salt2 = bcrypt.genSaltSync(10);
 const transactionRedirectUrl = process.env.REACT_APP_TRANSACTION_REDIRECT_URL;
 
 function CartItem({ product: { id, title, price, quantity } }) {
@@ -69,54 +70,64 @@ export default function Cart() {
         }
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
-        let data = JSON.stringify({
-            "amount": totalAmount,  //only alow LKR amouts
-            "app_id": appId,
-            "reference": new Date().getTime(), //enter uniq number
-            "customer_first_name": fname || 'firstname',
-            "customer_last_name": lname || 'lastname',
-            "customer_phone_number": '+94' + phone || '+94123456790', //please enter number with +94
-            "customer_email": email || 'username@example.com',
-            "transaction_redirect_url": transactionRedirectUrl
-        });
+        let data = { 
+            transaction_redirect_url: transactionRedirectUrl,
+            customer_email: "chamathrathnayake95@gmail.com", 
+            customer_phone_number: "+94778869070", 
+            reference: new Date().getTime(), 
+            amount: 100, 
+            app_id: appId, 
+            is_sdk: 2,
+            sdk_type: 1,
+            authorization: appToken,
+        };
+        
+        let hash = sha256.create();
+        hash = hash.update(JSON.stringify(data) + salt);
+        hash = hash.hex();
+        // const hash = await genHash(JSON.stringify(data) + salt);
+        console.log(hash);
 
-        const hash = bcrypt.hashSync(data, salt2);
-        let config = {
+        delete data.authorization;
+        data["customer_first_name"] = "chamath";
+        data["customer_last_name"] = "rathnayake";
+
+        axios.post(`${paymentUrl}${hash}`, {
             'method': 'POST',
             'headers': {
               'Authorization': appToken,
               'Content-Type': 'application/json'
             },
             body: data
-        };
+        })
+        .then(res => {
+            console.log(res.data);
+            if(res.data && res.data.status === 1000) {
+                // window.location.href = transactionRedirectUrl;
 
-        data = JSON.stringify({ "amount": 100, "app_id": "37JR1187AEA68DE9D6D84", "reference": "5888995555546656925", "customer_first_name": "chamath", "customer_last_name": "rathnayake", "customer_phone_number": "+94778869070", "customer_email": "chamathrathnayake95@gmail.com", "transaction_redirect_url": "https://webhook.site/40571e78-2013-4017-a90e-dc956deda18c" });
+            } else {
 
-        config = {
-          method: 'POST',
-          url: 'https://merchant-api-live-v2.onepay.lk/api/ipg/gateway/request-transaction/?hash=b4aa8ffdccfa3827335a3792551f609f13f6bdc5d689245f713038afb3dc06a5',
-          headers: {
-            'Authorization': '438092d19904343b0baa6d77376a22df6ff2b104ec9a524098b7406f5e50e3e07a9fceeadd0ff522.FXMS1187AEA68DE9D6DF1',
-            'Content-Type': 'application/json'
-          },
-          data: data
-        };
-
-        fetch(`${paymentUrl}${hash}`, config)
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            window.location.href = transactionRedirectUrl;
+            }
         })
         .catch(err => {
-            console.log(err);
-        });
+            console.log('Error', err);
+        })
 
 
     }
+
+    // const genHash = async(string) => {
+    //     const utf8 = new TextEncoder().encode(string);
+    //     const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
+    //     const hashHex = hashArray
+    //         .map((bytes) => bytes.toString(16).padStart(2, '0'))
+    //         .join('');
+    //     return hashHex;
+    // }
 
     return (
         <div className={`d-flex flex-lg-row justify-content-lg-between flex-sm-column flex-sm-column-reverse ${classes.Cart}`}>
