@@ -1,0 +1,32 @@
+.Header {
+    nav {
+        box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.1);
+
+        img {
+            width: 9rem;
+            height: 4rem;
+        }
+
+        .cartLink {
+            width: 7.6rem;
+
+            svg {
+                fill: rgba(0, 0, 0, 0.6);
+
+            }
+
+            &:hover svg {
+                fill: #15849b;
+            }
+        }
+
+        .minicart {
+            border: none;
+            box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .minicart.hidden {
+            display: none;
+        }
+    }
+}

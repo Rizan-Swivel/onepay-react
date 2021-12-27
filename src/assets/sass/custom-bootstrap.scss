@@ -1,0 +1,22 @@
+
+// $success: #5cb85c;
+
+// $custom-colors: (
+//   "success": $success,
+// );
+
+// $theme-colors: map-merge($theme-colors, $custom-colors);
+
+// nav links styles
+.nav-link {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7) !important;
+
+  &:hover,
+  &:active {
+    color: #15849b !important;
+  }
+}
+
+

@@ -1,0 +1,36 @@
+@import "./assets/sass/custom-bootstrap.scss";
+@import "./assets/sass/fonts.scss";
+@import "./assets/sass/mixings.scss";
+
+@import "~bootstrap/scss/bootstrap.scss";
+
+// variables
+$primary-font: "Lato";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 90% !important; // 1rem = 16px default value
+}
+
+body {
+  font-family: $primary-font, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
